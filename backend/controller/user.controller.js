@@ -8,7 +8,6 @@ const generateToken = (id) => {
   });
 };
 
-// Register User
 export const userRegister = async (req, res) => {
   try {
     const { name, email, password, accountNo } = req.body;
@@ -42,7 +41,7 @@ export const userRegister = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // Production માં true કરવું
+      secure: false,
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
@@ -64,7 +63,6 @@ export const userRegister = async (req, res) => {
   }
 };
 
-// Login User
 export const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -120,7 +118,6 @@ export const userLogin = async (req, res) => {
   }
 };
 
-// Logout User
 export const userLogOut = async (req, res) => {
   try {
     res.clearCookie("token");
@@ -139,7 +136,6 @@ export const userLogOut = async (req, res) => {
   }
 };
 
-// Get Logged In User
 export const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");

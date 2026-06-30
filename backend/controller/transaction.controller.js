@@ -1,7 +1,6 @@
 import Transaction from "../models/transaction.model.js";
 import User from "../models/user.model.js";
 
-// Credit Money
 export const credit = async (req, res) => {
   try {
     const { amount, description } = req.body;
@@ -50,7 +49,6 @@ export const credit = async (req, res) => {
   }
 };
 
-// Debit Money
 export const debit = async (req, res) => {
   try {
     const { amount, description } = req.body;
@@ -106,7 +104,6 @@ export const debit = async (req, res) => {
   }
 };
 
-// Transaction History
 export const getTransaction = async (req, res) => {
   try {
     const transactions = await Transaction.find({
