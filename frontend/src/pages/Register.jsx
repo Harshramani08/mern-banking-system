@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../service/api";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -29,15 +30,16 @@ const Register = () => {
     const { name, email, password, confirmPassword, accountNo } = formData;
 
     if (!name || !email || !password || !confirmPassword || !accountNo) {
-      return alert("Please fill all fields");
+      return toast.error("Please fill all fields", { position: "bottom-right" });
+
     }
 
     if (password.length < 6) {
-      return alert("Password must be at least 6 characters");
+      return toast.error("Password must be at least 6 characters", { position: "bottom-right" });
     }
 
     if (password !== confirmPassword) {
-      return alert("Passwords do not match");
+      return toast.error("Password do not match", { position: "bottom-right" });
     }
 
     try {
@@ -50,7 +52,9 @@ const Register = () => {
         accountNo,
       });
 
-      alert(res.data.message);
+
+      return toast.success(res.data.message, { position: "bottom-right" });
+
 
       navigate("/");
     } catch (error) {
@@ -132,8 +136,8 @@ const Register = () => {
           <button
             disabled={loading}
             className={`w-full py-3 rounded-lg text-white transition ${loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
               }`}
           >
             {loading ? "Creating Account..." : "Register"}

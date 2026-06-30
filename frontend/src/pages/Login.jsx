@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../service/api";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      return alert("Please fill all fields");
+      return toast.error("Please fill all fields", { position: "bottom-right" });
     }
 
     try {
@@ -32,11 +33,12 @@ const Login = () => {
 
       const res = await api.post("/auth/login", formData);
 
-      alert(res.data.message);
+      toast.success(res.data.message, { position: "bottom-right" });
 
       navigate("/transaction");
     } catch (error) {
-      alert(error.response?.data?.message || "Login Failed");
+      return toast.error("Login Failed!!", { position: "bottom-right" });
+
     } finally {
       setLoading(false);
     }
@@ -87,8 +89,8 @@ const Login = () => {
           <button
             disabled={loading}
             className={`w-full py-3 rounded-lg text-white transition ${loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
               }`}
           >
             {loading ? "Logging In..." : "Login"}

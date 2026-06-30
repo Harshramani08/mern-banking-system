@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import api from "../service/api";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -8,23 +9,21 @@ const Navbar = () => {
     try {
       await api.post("/auth/logout");
 
-      alert("Logout Successfully");
+      toast.success("Logout Successfully", { position: "bottom-right" });
 
       navigate("/", { replace: true });
     } catch (error) {
-      alert(error.response?.data?.message || "Logout Failed");
+      toast.error(error.response?.data?.message || "Logout Failed", { position: "bottom-right" });
     }
   };
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
-        {/* Logo */}
         <h1 className="text-2xl font-bold text-blue-600">
           MERN Bank
         </h1>
 
-        {/* Menu */}
         <div className="flex items-center gap-4">
           <NavLink
             to="/transaction"

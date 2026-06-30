@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../service/api";
 import Navbar from "../components/Navbar";
+import toast from "react-hot-toast";
 
 const Transaction = () => {
   const [user, setUser] = useState(null);
@@ -14,7 +15,9 @@ const Transaction = () => {
       const res = await api.get("/auth/me");
       setUser(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message || "Failed to load user", { position: "bottom-right" }
+      );
     }
   };
 
@@ -23,7 +26,9 @@ const Transaction = () => {
       const res = await api.get("/data/history");
       setTransactions(res.data);
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message || "Failed to load history", { position: "bottom-right" }
+      );
     }
   };
 
@@ -32,35 +37,61 @@ const Transaction = () => {
     getHistory();
   }, []);
 
-  const handleTransaction = async (type) => {
+  const handleCredit = async () => {
     if (!amount) {
-      return alert("Please enter amount");
+      return toast.error("Please enter amount", { position: "bottom-right" });
     }
 
     if (Number(amount) <= 0) {
-      return alert("Amount must be greater than 0");
+      return toast.error("Amount must be greater than 0", { position: "bottom-right" });
     }
 
     try {
-      setLoading(true);
-
-      const endpoint = type === "credit" ? "/data/credit" : "/data/debit";
-
-      const res = await api.post(endpoint, {
+      const res = await api.post("/data/credit", {
         amount,
         description,
       });
 
-      alert(res.data.message);
+      toast.success(res.data.message, { position: "bottom-right" });
 
-      await Promise.all([getUser(), getHistory()]);
+      await getUser();
+      await getHistory();
 
       setAmount("");
       setDescription("");
     } catch (error) {
-      alert(error.response?.data?.message || "Transaction Failed");
-    } finally {
-      setLoading(false);
+      toast.error(
+        error.response?.data?.message || "Credit Failed", { position: "bottom-right" }
+      );
+    }
+  };
+
+  const handleDebit = async () => {
+    if (!amount) {
+      return toast.error("Please enter amount", { position: "bottom-right" });
+    }
+
+    if (Number(amount) <= 0) {
+      return toast.error("Amount must be greater than 0", { position: "bottom-right" });
+    }
+
+    try {
+      const res = await api.post("/data/debit", {
+        amount,
+        description,
+      });
+
+      toast.success(res.data.message, { position: "bottom-right" });
+
+      await getUser();
+      await getHistory();
+
+      setAmount("");
+      setDescription("");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Debit Failed", { position: "bottom-right" }
+      );
     }
   };
 
@@ -81,8 +112,6 @@ const Transaction = () => {
         <h1 className="text-2xl font-bold mb-6">
           Welcome, {user.name} 👋
         </h1>
-
-        {/* Cards */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -107,8 +136,6 @@ const Transaction = () => {
           </div>
 
         </div>
-
-        {/* Transaction Form */}
 
         <div className="bg-white shadow rounded-xl p-5 mt-6">
 
@@ -135,26 +162,21 @@ const Transaction = () => {
           <div className="flex flex-col sm:flex-row gap-4">
 
             <button
-              disabled={loading}
-              onClick={() => handleTransaction("credit")}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition"
+              onClick={handleCredit}
+              className="bg-green-600 text-white px-5 py-2 rounded-lg"
             >
-              {loading ? "Processing..." : "Credit"}
+              Credit
             </button>
 
             <button
-              disabled={loading}
-              onClick={() => handleTransaction("debit")}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg transition"
+              onClick={handleDebit}
+              className="bg-red-600 text-white px-5 py-2 rounded-lg"
             >
-              {loading ? "Processing..." : "Debit"}
+              Debit
             </button>
-
           </div>
 
         </div>
-
-        {/* Transaction History */}
 
         <div className="bg-white shadow rounded-xl p-5 mt-6">
 

@@ -3,38 +3,15 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Transaction from "./pages/Transaction";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
-import GuestRoute from "./components/GuestRoute";
 
-function App() {
+const App = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <GuestRoute>
-            <Login />
-          </GuestRoute>
-        }
-      />
+      <Route path="/" element={<Login />} />
 
-      <Route
-        path="/register"
-        element={
-          <GuestRoute>
-            <Register />
-          </GuestRoute>
-        }
-      />
+      <Route path="/register" element={<Register />} />
 
-      <Route
-        path="/transaction"
-        element={
-          <ProtectedRoute>
-            <Transaction />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/transaction" element={<Transaction />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
