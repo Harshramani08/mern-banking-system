@@ -58,7 +58,7 @@ const Register = () => {
 
       navigate("/");
     } catch (error) {
-      alert(error.response?.data?.message || "Registration Failed");
+      toast.error(error.response?.data?.message || "Registration Failed", { position: "bottom-right" });
     } finally {
       setLoading(false);
     }
