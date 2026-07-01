@@ -7,8 +7,8 @@ import UserRouter from "./routers/user.route.js";
 import TransactionRouter from "./routers/transaction.route.js";
 import dns from "dns";
 
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
 dotenv.config();
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 connectDB();
 
 const app = express();
